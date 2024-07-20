@@ -6,8 +6,12 @@ class CityForm(ModelForm):
     class Meta:
         model = City
         fields = ['name']
-        widgets = {'name' : TextInput(attrs={'class': 'form-control',
-                                             'name': 'city',
-                                             'id': 'city',
-                                             'placeholder': 'Введите город'})}
+        widgets = {
+            'name': TextInput(attrs={
+                'class': 'form-control',
+                'id': 'cityInput',  # Указываем ID для использования в JavaScript
+                'placeholder': 'Введите город',
+                'autocomplete': 'off'  # Отключаем автозаполнение браузера
+            })
+        }
         

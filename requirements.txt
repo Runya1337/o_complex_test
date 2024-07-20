@@ -1,0 +1,9 @@
+Django>=3.2,<4.0  # Выбрана поддерживаемая версия Django
+djangorestframework  # Если планируется использование REST API
+requests  # Для выполнения HTTP-запросов к внешним API
+gunicorn  # WSGI HTTP сервер для продакшена
+psycopg2-binary>=2.8  # Драйвер PostgreSQL, если вы используете PostgreSQL в качестве базы данных
+django-environ  # Управление настройками через переменные окружения
+pytest-django  # Для тестирования приложения Django
+pytest-cov  # Для измерения покрытия кода тестами
+flake8  # Для проверки стиля кода

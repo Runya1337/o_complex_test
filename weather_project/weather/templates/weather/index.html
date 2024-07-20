@@ -5,25 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Погодное приложение</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        .autocomplete-results {
+            position: absolute;
+            background: white;
+            width: 100%;
+            box-shadow: 0px 4px 5px rgba(0,0,0,0.2);
+        }
+        .autocomplete-results div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-results div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
         <h5 class="my-0 mr-md-auto font-weight-normal">Тестовое Нуртдинова Айнура</h5>
         <nav class="my-2 my-md-0 mr-md-3">
-          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> </a>
-          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> </a>
-          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> </a>
+          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></a>
+          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></a>
+          <a class="p-2 text-dark" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></a>
         </nav>
         <a class="btn btn-outline-primary" href="https://github.com/Runya1337">Перейти на GitHub</a>
-      </div>
-      <div class="container my-5 text-center">
+    </div>
+    <div class="container my-5 text-center">
         <div class="mb-5">
             <h1>Погода в вашем городе</h1>
             <form action="" method="post">
                 {% csrf_token %}
-                <label for="city">Город</label>
-                {{ form.name }}
-                <input type="submit" name="send" value="Узнать" class="mt-2 btn btn-danger">
+                <input type="text" id="cityInput" class="form-control" placeholder="Введите город">
+                <input type="submit" value="Узнать" class="mt-2 btn btn-danger">
+                <div id="autocompleteResults" class="autocomplete-results"></div>
             </form>
         </div>
         <div>
@@ -34,7 +49,6 @@
                     <div class="col-md-4">
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h2 class="card-text"><b></b> {{ info.date_name }}</h2>
                                 <h5 class="card-title"><b>Город:</b> {{ info.city }}</h5>
                                 <p class="card-text"><b>Дата:</b> {{ info.date }}</p>
                                 <p class="card-text"><b>Температура:</b> {{ info.temperature }}<sup>o</sup>C</p>
@@ -45,10 +59,37 @@
                     {% endfor %}
                 </div>
             </div>
-
-
         </div>
     </div>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#cityInput').on('input', function() {
+            var input = $(this).val();
+            if (input.length > 0) {
+                $.ajax({
+                    url: '{% url "autocomplete_city" %}',
+                    data: {
+                        'term': input
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#autocompleteResults').empty();
+                        data.forEach(function(item) {
+                            $('#autocompleteResults').append($('<div>').text(item).addClass('autocomplete-item'));
+                        });
+                    }
+                });
+            } else {
+                $('#autocompleteResults').empty();
+            }
+        });
+
+        $(document).on('click', '.autocomplete-item', function() {
+            $('#cityInput').val($(this).text());
+            $('#autocompleteResults').empty();
+        });
+    });
+    </script>
 </body>
 </html>

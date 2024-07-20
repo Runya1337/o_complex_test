@@ -1,10 +1,16 @@
 import requests
+from django.http import JsonResponse
 from django.shortcuts import render
 from .models import City
 from .forms import CityForm
 import json
 from datetime import datetime, timedelta
-    
+
+def autocomplete_city(request):
+    query = request.GET.get('term', '')  # Получаем ввод пользователя
+    cities = City.objects.filter(name__icontains=query)[:8]  # Ищем похожие города, возвращаем первые 8
+    results = [city.name for city in cities]
+    return JsonResponse(results, safe=False)
 
 def index(request):
     appid = 'da4b0f65e3152e9f14707a62675d7717'
